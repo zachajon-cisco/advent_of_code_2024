@@ -18,47 +18,50 @@ func main() {
 	var safeReports int
 
 	for _, l := range lines {
+		var problems int
 		values := strings.Split(l, " ")
-
-		ok := true
-		var incr bool
-		var decr bool
-		var same bool
-
 		for i := range values {
+
 			if i == len(values)-1 {
 				break
 			}
 			v1, _ := strconv.Atoi(values[i])
 			v2, _ := strconv.Atoi(values[i+1])
-
-			if v1 < v2 {
-				incr = true
-				if (v2 - v1) > 3 {
-					ok = false
-				}
-			} else if v1 > v2 {
-				decr = true
-				if (v1 - v2) > 3 {
-					ok = false
-				}
-			} else {
-				same = true
-			}
+			problems += SafeOrNot(v1, v2)
 		}
 
-		if decr && incr {
-			ok = false
-		}
-
-		if same {
-			ok = false
-		}
-
-		if ok {
+		if problems <= 1 {
 			safeReports += 1
 		}
+
 	}
 
 	fmt.Println(safeReports)
+}
+
+func SafeOrNot(v1 int, v2 int) int {
+	var incr bool
+	var decr bool
+
+	if v1 < v2 {
+		incr = true
+		if decr {
+			return 1
+		}
+		if (v2 - v1) > 3 {
+			return 1
+		}
+	} else if v1 > v2 {
+		decr = true
+		if incr {
+			return 1
+		}
+		if (v1 - v2) > 3 {
+			return 1
+		}
+	} else {
+		return 1
+	}
+
+	return 0
 }
